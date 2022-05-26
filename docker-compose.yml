@@ -1,0 +1,18 @@
+#CREAR DOCKERS  SOLO DE DJANGO
+version: '3.5'
+services:
+  api_django:
+    build: ./api_django
+    command: python api_django/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/my_app_django_dir
+    ports:
+      - "8000:8000"
+  app:
+    volumes:
+      - .:/app/react-app
+    build: ./react-app
+    ports:
+      - 3000:3000
+    command: npm start
+    tty: true
