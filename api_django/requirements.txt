@@ -1,7 +1,7 @@
 #DJANGO
 Django==3.2.5
 #DJANGO REST-FRAMEWORK
-djangorestframework==3.12.4
+djangorestframework==3.13.1
 #MYSQL
 mysqlclient
 PyMySQL==1.0.2
