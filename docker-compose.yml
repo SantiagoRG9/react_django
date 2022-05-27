@@ -9,10 +9,12 @@ services:
     ports:
       - "8000:8000"
   app:
-    volumes:
-      - .:/app/react-app
     build: ./react-app
-    ports:
-      - 3000:3000
     command: npm start
+    volumes:
+      - './react-app:/app'
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api_django
     tty: true

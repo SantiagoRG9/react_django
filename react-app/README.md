@@ -1,46 +1,49 @@
 # --------------------------------- README CREACION APP REACT, DJANGO API CON DOCKER ------------------------------
 
-# PASO 1 CREAR docker-compose SIN BUILD POR AHORA
-    version: '3.5'
-    services:
-    api_django:
-        build: ./api_django
-        command: python api_django/manage.py runserver 0.0.0.0:8000
-        volumes:
-        - .:/my_app_django_dir
-        ports:
-        - "8000:8000"
-    app:
-        image: node:14-alpine
-        volumes:
-        - .:/app/react-app
-        build: ./react-app
-        ports:
-        - 3000:3000
-        command: npm start
-        tty: true
+
+
+# PASO 1 CREAR docker-compose 
+ # NOTA: SINO SE CREAN EL PROYECTO MANUAL, AGREGAR image: node:14-alpine A CAMBIO DEL build: ./react-app DESPUES VUELVE Y SE CAMBIA
+version: '3.5'
+services:
+  api_django:
+    build: ./api_django
+    command: python api_django/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/my_app_django_dir
+    ports:
+      - "8000:8000"
+  app:
+    build: ./react-app
+    command: npm start
+    volumes:
+      - './react-app:/app'
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api_django
+    tty: true
+
 
 # PASO 2 CREAR PROYECTO REACT
-    sudo docker-compose run --rm app npx create-react-app react-app
+    - sudo docker-compose run --rm app npx create-react-app react-app ######### image: node:14-alpine EN docker-compose
+    - npx create-react-app react-app ###### TOCA INSTALAR REACT EN EL PC PARA ESTA OPCION
 
 # PASO 3 CREAR Dockerfile EN AMBOS PROYECTOS/CARPETAS DjangoAPI Y ReactAPP Y AGREGAR build: EN docker-compose
     FROM node:14-alpine
-
-    # set working directory
+    RUN mkdir /app
     WORKDIR /app
-
-    # add `/app/node_modules/.bin` to $PATH
     ENV PATH /app/node_modules/.bin:$PATH
-
     # install app dependencies
     COPY package.json ./
     COPY package-lock.json ./
-    RUN npm install --silent
-    RUN npm install react-scripts@3.4.1 -g --silent
+    RUN npm install
+    COPY . /app/
+    CMD ["npm", "start"]
 
-    # add app
-    COPY . ./
 
+# ACTUALIZACIONES EN ARCHIVOS DOCKER DEBO HACER UN BUILD
+  docker-compose build
 
 
 
