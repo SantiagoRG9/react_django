@@ -4,6 +4,11 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 from apps.users.views import Login, Logout
 
 
@@ -27,7 +32,9 @@ urlpatterns = [
    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
    path("login/", Login.as_view(), name="login"),
    path("logout/", Logout.as_view(), name="logout"),
-   path('usuario/', include('apps.users.api.urls')),
+   path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+   path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+   path('usuario/', include('apps.users.api.routers')),
    path('products/', include('apps.products.api.routers')),
    path('api-auth/', include('rest_framework.urls'))
 ]

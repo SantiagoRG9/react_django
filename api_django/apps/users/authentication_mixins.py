@@ -31,4 +31,4 @@ class Authentication(authentication.BaseAuthentication):
         if self.user is None:
             raise exceptions.AuthenticationFailed('No se han enviado las credenciales')
 
-        return (self.user, None)
+        return (self.user, 1)
