@@ -12,7 +12,9 @@ services:
     build: ./react-app
     command: npm start
     volumes:
-      - './react-app:/app'
+
+      - ./react-app:/app
+      - /app/node_modules
     ports:
       - "3000:3000"
     depends_on:
